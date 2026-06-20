@@ -1,157 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+    <title>Frontend Mentor | FX Checker</title>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <img src="./assets/images/logo.svg" alt="FX Checker" class="logo" />
+        <div class="header-meta">
+          <span class="currency-count">55</span>
+          <span>Currencies</span>
+          <span>•</span>
+          <span>EOD</span>
+          <span>•</span>
+          <span>ECB Data</span>
+        </div>
+      </header>
 
-  <title>Frontend Mentor | FX Checker</title>
-</head>
-<body>
+      <section class="ticker">
+        <span class="ticker-label"><span class="dot"></span> Live Markets</span>
+        <div class="ticker-track">
+          <div class="ticker-item">
+            <span class="currency-pair">USD/JPY</span>
+            <span>157.91</span>
+            <span class="positive">▲ +0.04%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="currency-pair">GBP/USD</span>
+            <span>1.3575</span>
+            <span class="negative">▼ -0.22%</span>
+          </div>
+        </div>
+      </section>
 
-<!--
-  This file holds the static written content from the design so you don't have to
-  retype it. It is intentionally unstructured — building the HTML is your job.
+      <main class="dashboard">
+        <section class="converter">
+          <div class="converter-header">
+            <h1>Check The Rate</h1>
+          </div>
 
-  Notes labelled "Dynamic:" mark content pulled in with JavaScript — live exchange
-  rates, or the pairs and conversions you save in the browser. Text in [square
-  brackets] is a live value that sits inside otherwise-static copy.
+          <div class="converter-body">
+            <div class="groups">
+              <div class="currency-group">
+                <label for="send-amount"> Send </label>
+                <div class="conversion-container">
+                  <input id="send-amount" type="number" value="1000" />
+                  <button class="currency-btn"><img class="flag" src="./assets/images/flags/us.webp" alt=""> USD <img src="./assets/images/icon-chevron-down.svg" alt="" class="icon"></button>
+                </div>
+              </div>
+              <button class="swap-btn"><img src="./assets/images/icon-exchange.svg" alt=""></button>
+              <div class="currency-group">
+                <label> Receive </label>
+                <div class="conversion-container">
+                  <div class="receive-amount">853.00</div>
+                  <button class="currency-btn"><img class="flag" src="./assets/images/flags/eu.webp" alt=""> EUR <img src="./assets/images/icon-chevron-down.svg" alt="" class="icon"></button>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-conversion">
+              <p class="exchange-rate">1 USD = 0.8530 EUR</p>
 
-  Labels are written in normal case even though the design shows many of them in
-  uppercase. Apply that uppercase look with CSS (text-transform: uppercase) rather
-  than capital letters in the markup — all-caps text can be read out awkwardly by
-  some screen readers. Acronyms and codes (FX, EOD, ECB, USD, EUR…) stay as-is.
--->
+              <div class="converter-actions">
+                <button class="favorite"><img src="./assets/images/icon-star-filled.svg" alt=""> Favorited</button>
+                <button class="log">Log Conversion</button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="tabs-section">
+          <div class="tabs">
+            <button class="tab active">History</button>
+            <button class="tab">Compare</button>
+            <button class="tab">Favorites <span class="count">10</span></button>
+            <button class="tab">Log <span class="count">8</span></button>
+          </div>
 
+          <div class="tab-panel history-panel">
+            <div class="history-header">
+              <div class="stats-grid">
+                <article class="stat-card">
+                  <span>Open</span>
+                  <h3>0.8421</h3>
+                </article>
+                <article class="stat-card">
+                  <span>Last</span>
+                  <h3>0.8530</h3>
+                </article>
+                <article class="stat-card">
+                  <span>Change</span>
+                  <h3 class="positive">+0.0109</h3>
+                </article>
+                <article class="stat-card">
+                  <span>% Change</span>
+                  <h3 class="positive">▲ +1.29%</h3>
+                </article>
+              </div>
 
-<!-- Header -->
+              <div class="range-selector">
+                <button>1D</button>
+                <button>1W</button>
+                <button class="active">1M</button>
+                <button>3M</button>
+                <button>1Y</button>
+                <button>5Y</button>
+              </div>
+            </div>
 
-<!-- Brand logo — assets/images/logo.svg (the lockup already includes the "FX_CHECKER" wordmark; use alt="FX Checker") -->
+            <div class="chart-container">
+              <div class="chart-placeholder"> USD / EUR</div>
+            </div>
+          </div>
 
-<!-- Dynamic: number of available currencies, e.g. "55" -->
-Currencies · EOD · ECB data
+          <div class="tab-panel compare-panel hidden"></div>
 
+          <div class="tab-panel favorites-panel hidden"></div>
 
-<!-- Live markets ticker — auto-scrolls across the page, pauses on hover -->
+          <div class="tab-panel log-panel hidden"></div>
+        </section>
+      </main>
+    </div>
 
-Live markets
-
-<!-- Dynamic: scrolling list of currency pairs, each with its rate and 24h change (▲ up / ▼ down) -->
-
-
-<!-- Converter -->
-
-Check the rate
-
-Send
-<!-- Dynamic: amount to convert (number input, defaults to 1,000) -->
-<!-- Dynamic: selected "send" currency — flag + code; opens the currency picker -->
-
-<!-- Swap the send and receive currencies (icon button) -->
-
-Receive
-<!-- Dynamic: converted amount -->
-<!-- Dynamic: selected "receive" currency — flag + code; opens the currency picker -->
-
-<!-- Dynamic: exchange rate for the active pair, e.g. "1 USD = 0.8530 EUR" -->
-
-<!-- Favorite toggle for the active pair — reads "Favorite" when unpinned, "Favorited" when pinned -->
-Favorite
-Favorited
-
-Log conversion
-
-
-<!-- Currency picker — popover opened from either currency button -->
-
-Search currencies...
-
-Popular
-<!-- Dynamic: number of popular currencies -->
-<!-- Dynamic: popular currencies, each row: flag, code, name (a checkmark marks the selected one) -->
-
-Other currencies
-<!-- Dynamic: number of other currencies -->
-<!-- Dynamic: every other currency, each row: flag, code, name -->
-
-<!-- Dynamic: while searching, the list filters to the currencies matching the query -->
-
-
-<!-- Tabs — collapse into a dropdown on mobile -->
-
-History
-Compare
-Favorites
-<!-- Dynamic: number of favorited pairs (badge) -->
-Log
-<!-- Dynamic: number of logged conversions (badge) -->
-
-
-<!-- Tab panel: History (default tab) -->
-
-Open
-<!-- Dynamic: opening rate for the selected range -->
-Last
-<!-- Dynamic: latest rate -->
-Change
-<!-- Dynamic: change over the range (signed; positive green, negative red) -->
-% change
-<!-- Dynamic: percentage change over the range (▲/▼; positive green, negative red) -->
-
-<!-- Date range selector -->
-1d
-1w
-1m
-3m
-1y
-5y
-
-<!-- Dynamic: active pair, e.g. "USD/EUR" -->
-<!-- Dynamic: latest rate and timestamp, e.g. "0.8530 · May 14 16:00 CET" -->
-<!-- Dynamic: line + area chart of the pair's rate history, with Y-axis (high/mid/low) and X-axis date labels -->
-
-<!-- History empty / error state -->
-No chart data available
-We couldn't load rate history for [pair] right now. This usually clears up in a minute.
-
-
-<!-- Tab panel: Compare -->
-
-Multi-currency
-<!-- Dynamic: send amount and base currency, e.g. "1,000 from USD" -->
-<!-- Dynamic: number of comparison rows, e.g. "8 pairs" -->
-
-<!-- Dynamic: one row per currency, each: flag, code, name, converted amount, reference rate (e.g. "@ 0.7366"), and a star to pin/unpin -->
-
-<!-- Compare empty state -->
-No comparison available
-Enter an amount in Send above to see what your money is worth in other currencies.
-
-
-<!-- Tab panel: Favorites (pinned pairs, saved in the browser) -->
-
-Pinned pairs
-<!-- Dynamic: number of pinned pairs, e.g. "10 favorites" -->
-
-<!-- Dynamic: one row per pinned pair, each: pair (e.g. "USD → EUR"), live rate, 24h change %, and a filled star to unpin -->
-
-<!-- Favorites empty state -->
-No pinned pairs yet
-Pin a pair to track its rate here. Tap the star icon on any conversion or comparison row.
-
-
-<!-- Tab panel: Log (conversion history, saved in the browser) -->
-
-Conversion log
-<!-- Dynamic: number of logged conversions, e.g. "8 logged" -->
-Clear all
-
-<!-- Dynamic: one row per logged conversion, each: relative time (e.g. "20m", "1h", "13 May"), pair, send amount, receive amount, and a delete button -->
-
-<!-- Log empty state -->
-No conversions logged yet
-Every conversion is recorded here automatically when you tap Log conversion. Your log is private to this session and this browser.
-
-</body>
+    <script src="./js/app.js"></script>
+  </body>
 </html>

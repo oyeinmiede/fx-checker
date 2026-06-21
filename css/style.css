@@ -114,7 +114,7 @@ body {
     margin: 0 auto;
 }
 
-.converter-body{
+.converter-body {
     background: var(--neutral-700);
     border-radius: var(--radius-20);
 }
@@ -350,17 +350,27 @@ button {
 }
 
 .converter-actions .favorite {
-    background-color: var(--lime-500);
-    color: var(--neutral-900);
+    background-color: var(--neutral-700);
+    border: 1px solid var(--neutral-600);
+    color: var(--neutral-50);
     display: flex;
     align-items: center;
 }
 
+.converter-actions .favorite.favorited {
+    background-color: var(--lime-500);
+    color: var(--neutral-900);
+    border: 0;
+}
+
 .favorite img {
-    filter: brightness(0);
     width: 16px;
     height: 16px;
     margin-right: 6px;
+}
+
+.favorited img {
+    filter: brightness(0);
 }
 
 .converter-actions .log {
@@ -467,13 +477,46 @@ button {
    CHART
 ========================= */
 
+.tab-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--neutral-700);
+    border: 1px solid var(--neutral-600);
+    border-radius: var(--radius-16);
+}
+
+.tab-panel.history-panel {
+    background: none;
+    border: 0;
+}
+
 .chart-container {
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     background: var(--neutral-700);
     border: 1px solid var(--neutral-600);
     border-radius: var(--radius-16);
+}
+
+.chart-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-250);
+}
+
+.chart-meta h3 {
+    font-size: var(--text-3);
+    font-weight: 400;
+}
+
+.chart-meta p {
+    font-size: var(--text-5);
+    font-weight: 100;
+    text-transform: uppercase;
 }
 
 .chart-placeholder {
@@ -481,4 +524,191 @@ button {
     opacity: .15;
     font-size: 5rem;
     font-weight: 700;
+}
+
+.hidden {
+    display: none;
+}
+
+.empty-state {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.empty-state h3 {
+    font-size: var(--text-1);
+    color: var(--neutral-200);
+}
+
+.empty-state p {
+    font-size: var(--text-3);
+    color: var(--neutral-300);
+}
+
+/* =========================
+FAVORITES PANEL
+========================= */
+
+.favorites-panel {
+    flex-direction: column;
+}
+
+.favorites-panel .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-150) var(--spacing-200);
+    text-transform: uppercase;
+}
+
+.favorites-panel .panel-header h2 {
+    font-size: var(--text-3);
+    font-weight: 400;
+}
+
+.favorites-panel .panel-header p {
+    font-size: var(--text-5);
+    color: var(--neutral-200);
+}
+
+.favorites-panel .favorites-container {
+    width: 100%;
+}
+
+.favorite-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--neutral-600);
+    border: 1px solid var(--neutral-500);
+    border-radius: var(--radius-10);
+    margin: var(--spacing-050) var(--spacing-200) var(--spacing-150);
+    padding: var(--spacing-150) var(--spacing-200);
+}
+
+.favorite-row .arrow {
+    color: var(--neutral-200);
+}
+
+.favorite-row strong {
+    font-weight: 400;
+    font-size: var(--text-4);
+}
+
+.favorite-row button {
+    border-radius: var(--radius-8);
+    border: 1px solid var(--lime-500);
+    padding: var(--spacing-100);
+    width: 32px;
+    height: 32px;
+}
+
+.favorite-row .left {
+    display: flex;
+    align-items: center;
+}
+
+.favorite-row .rate-info {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.favorite-row .rate-info h3 {
+    font-size: var(--text-3);
+}
+
+.favorite-row .rate-info span {
+    font-size: var(--text-6);
+}
+
+/* =========================
+LOG PANEL
+========================= */
+.log-panel .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-250);
+    text-transform: uppercase;
+}
+
+.log-panel .panel-header h2 {
+    font-size: var(--text-3);
+    font-weight: 400;
+}
+
+.log-panel .panel-header div {
+    display: flex;
+    align-items: center;
+}
+
+.log-panel .panel-header div p {
+    font-size: var(--text-5);
+    color: var(--neutral-50);
+    margin-right: 20px;
+}
+
+.log-panel .panel-header div button {
+    border: 1px solid var(--neutral-400);
+    background: var(--neutral-600);
+    padding: var(--spacing-100) var(--spacing-150);
+    border-radius: var(--radius-8);
+    text-transform: uppercase;
+    font-size: var(--text-5);
+    color: var(--neutral-200);
+}
+
+.log-row {
+    display: grid;
+    grid-template-columns: 70px 1fr 90px 90px 40px;
+    align-items: center;
+    text-transform: uppercase;
+    padding: var(--spacing-200);
+    background: var(--neutral-600);
+    border: 1px solid var(--neutral-500);
+    border-radius: var(--radius-10);
+    margin: 0 var(--spacing-250) var(--spacing-150);
+}
+
+.log-time {
+    color: var(--neutral-200);
+    font-size: var(--text-4);
+}
+
+.log-pair {
+    color: var(--neutral-50);
+    font-size: var(--text-4);
+}
+
+.log-pair span {
+    margin: 0 10px;
+    color: var(--neutral-200);
+}
+
+.log-send, .log-receive {
+    font-size: var(--text-3);
+}
+
+.log-send {
+    color: var(--neutral-100);
+}
+
+.log-receive {
+    color: var(--lime-500);
+}
+
+.delete-log {
+    justify-self: end;
+    background-color: var(--neutral-600);
+    border: 1px solid var(--neutral-500);
+    padding: var(--spacing-100);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-8);
 }

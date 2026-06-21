@@ -54,16 +54,47 @@
               <div class="currency-group">
                 <label for="send-amount"> Send </label>
                 <div class="conversion-container">
-                  <input id="send-amount" type="number" value="1000" />
-                  <button class="currency-btn"><img class="flag" src="./assets/images/flags/us.webp" alt=""> USD <img src="./assets/images/icon-chevron-down.svg" alt="" class="icon"></button>
+                  <input
+                    class="amount-input"
+                    id="send-amount"
+                    type="number"
+                    value="1000"
+                  />
+                  <button class="currency-btn">
+                    <img
+                      class="flag"
+                      src="./assets/images/flags/us.webp"
+                      alt=""
+                    />
+                    USD
+                    <img
+                      src="./assets/images/icon-chevron-down.svg"
+                      alt=""
+                      class="icon"
+                    />
+                  </button>
                 </div>
               </div>
-              <button class="swap-btn"><img src="./assets/images/icon-exchange.svg" alt=""></button>
+              <button class="swap-btn">
+                <img src="./assets/images/icon-exchange.svg" alt="" />
+              </button>
               <div class="currency-group">
                 <label> Receive </label>
                 <div class="conversion-container">
-                  <div class="receive-amount">853.00</div>
-                  <button class="currency-btn"><img class="flag" src="./assets/images/flags/eu.webp" alt=""> EUR <img src="./assets/images/icon-chevron-down.svg" alt="" class="icon"></button>
+                  <div class="receive-amount">0.00</div>
+                  <button class="currency-btn">
+                    <img
+                      class="flag"
+                      src="./assets/images/flags/eu.webp"
+                      alt=""
+                    />
+                    EUR
+                    <img
+                      src="./assets/images/icon-chevron-down.svg"
+                      alt=""
+                      class="icon"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
@@ -71,18 +102,33 @@
               <p class="exchange-rate">1 USD = 0.8530 EUR</p>
 
               <div class="converter-actions">
-                <button class="favorite"><img src="./assets/images/icon-star-filled.svg" alt=""> Favorited</button>
+                <button class="favorite">
+                  <img src="./assets/images/icon-star.svg" alt="" />
+                  Favorite
+                </button>
                 <button class="log">Log Conversion</button>
               </div>
             </div>
+          </div>
+          <div class="currency-picker hidden">
+            <div class="picker-header">
+              <h2>Select Currency</h2>
+              <button class="close-picker">✕</button>
+            </div>
+            <input
+              class="currency-search"
+              type="text"
+              placeholder="Search currencies..."
+            />
+            <div class="currency-list"></div>
           </div>
         </section>
         <section class="tabs-section">
           <div class="tabs">
             <button class="tab active">History</button>
             <button class="tab">Compare</button>
-            <button class="tab">Favorites <span class="count">10</span></button>
-            <button class="tab">Log <span class="count">8</span></button>
+            <button class="tab">Favorites <span class="count fav-count"></span></button>
+            <button class="tab">Log <span class="count log-count"></span></button>
           </div>
 
           <div class="tab-panel history-panel">
@@ -90,19 +136,19 @@
               <div class="stats-grid">
                 <article class="stat-card">
                   <span>Open</span>
-                  <h3>0.8421</h3>
+                  <h3 class="open-value">0.0000</h3>
                 </article>
                 <article class="stat-card">
                   <span>Last</span>
-                  <h3>0.8530</h3>
+                  <h3 class="last-value">0.0000</h3>
                 </article>
                 <article class="stat-card">
                   <span>Change</span>
-                  <h3 class="positive">+0.0109</h3>
+                  <h3 class="change-value">+0.0000</h3>
                 </article>
                 <article class="stat-card">
                   <span>% Change</span>
-                  <h3 class="positive">▲ +1.29%</h3>
+                  <h3 class="percent-change-value">▲ +0.00%</h3>
                 </article>
               </div>
 
@@ -117,19 +163,39 @@
             </div>
 
             <div class="chart-container">
-              <div class="chart-placeholder"> USD / EUR</div>
+              <div class="chart-meta">
+                <h3 class="chart-pair"></h3>
+                <p class="chart-rate"></p>
+              </div>
+              <canvas id="history-chart"></canvas>
             </div>
           </div>
 
           <div class="tab-panel compare-panel hidden"></div>
 
-          <div class="tab-panel favorites-panel hidden"></div>
+          <div class="tab-panel favorites-panel hidden">
+            <div class="panel-header">
+              <h2>Pinned Pairs</h2>
+              <p><span class="favorite-count">0</span> favorites</p>
+            </div>
+            <div class="favorites-container"></div>
+          </div>
 
-          <div class="tab-panel log-panel hidden"></div>
+          <div class="tab-panel log-panel hidden">
+            <div class="panel-header">
+              <h2>Conversion Log</h2>
+              <div>
+                <p><span class="logged-count">0</span> Logged</p>
+                <button>Clear All</button>
+              </div>
+            </div>
+            <div class="log-container"></div>
+          </div>
         </section>
       </main>
     </div>
 
-    <script src="./js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./js/app.js"></script>
   </body>
 </html>

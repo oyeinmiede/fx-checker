@@ -1,4 +1,6 @@
-![Design preview for the FX Checker coding challenge](./preview.jpg)# Frontend Mentor - FX Checker Solution
+# Frontend Mentor - FX Checker Solution
+
+![Design preview for the FX Checker coding challenge](./preview.jpg)
 
 This is my solution to the FX Checker challenge on Frontend Mentor. The goal was to build a responsive foreign exchange dashboard that allows users to convert currencies using live exchange rates, explore historical data, compare currencies, save favorites, and maintain a conversion log.
 

@@ -1,0 +1,277 @@
+/* =========================
+   GLOBAL INTERACTIONS
+========================= */
+
+button,
+.currency-option,
+.favorite-row,
+.compare-row,
+.log-row {
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        opacity .2s ease,
+        box-shadow .2s ease;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+/* =========================
+   TABS
+========================= */
+
+.tab:hover {
+    color: var(--lime-500);
+}
+
+.tab.active:hover {
+    color: var(--neutral-50);
+}
+
+/* =========================
+   CURRENCY BUTTONS
+========================= */
+
+.currency-btn:hover {
+    background: var(--neutral-400);
+    border-color: var(--neutral-300);
+}
+
+.currency-btn:active {
+    background: var(--neutral-300);
+}
+
+/* =========================
+   SWAP BUTTON
+========================= */
+
+.swap-btn:hover {
+    background: var(--neutral-500);
+    border-color: var(--lime-500);
+}
+
+.swap-btn:hover img {
+    transform: rotate(180deg);
+}
+
+.swap-btn img {
+    transition: transform .35s ease;
+}
+
+.swap-btn:active {
+    transform: scale(.95);
+}
+
+/* =========================
+   FAVORITE BUTTON
+========================= */
+
+.favorite:hover {
+    border-color: var(--lime-500);
+    background: var(--neutral-600);
+}
+
+.favorite.favorited:hover {
+    background: var(--lime-500);
+    opacity: .9;
+}
+
+/* =========================
+   LOG BUTTON
+========================= */
+
+.log:hover {
+    background: var(--lime-500);
+    color: var(--neutral-900);
+}
+
+.log.favorited:hover {
+    opacity: .9;
+}
+
+/* =========================
+   RANGE SELECTOR
+========================= */
+
+.range-selector button:hover {
+    color: var(--neutral-50);
+}
+
+.range-selector button.active {
+    background: var(--neutral-500);
+}
+
+.range-selector button.active:hover {
+    background: var(--neutral-400);
+}
+
+/* =========================
+   PICKER SEARCH
+========================= */
+
+.search-wrapper:focus-within {
+    border-color: var(--lime-500);
+}
+
+.currency-search::placeholder {
+    color: var(--neutral-200);
+}
+
+/* =========================
+   CURRENCY OPTIONS
+========================= */
+
+.currency-option:hover {
+    background: var(--neutral-600);
+    border-radius: var(--radius-8);
+}
+
+.currency-option:active {
+    background: var(--neutral-500);
+}
+
+/* =========================
+   FAVORITES
+========================= */
+
+.favorite-row:hover {
+    border-color: var(--lime-500);
+    transform: translateY(-2px);
+}
+
+.favorite-row button:hover {
+    background: var(--lime-500);
+}
+
+.favorite-row button:hover img {
+    filter: brightness(0);
+}
+
+/* =========================
+   COMPARE ROWS
+========================= */
+
+.compare-row:hover {
+    border-color: var(--lime-500);
+    transform: translateY(-2px);
+}
+
+.compare-row button:hover {
+    background: var(--lime-500);
+}
+
+.compare-row button:hover img {
+    filter: brightness(0);
+}
+
+/* =========================
+   LOG ROWS
+========================= */
+
+.log-row:hover {
+    border-color: var(--neutral-300);
+}
+
+.delete-log:hover {
+    border-color: var(--red-500);
+    background: rgba(255, 65, 65, .08);
+}
+
+.delete-log:hover img {
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(40%)
+        sepia(92%)
+        saturate(1318%)
+        hue-rotate(326deg)
+        brightness(102%)
+        contrast(101%);
+}
+
+/* =========================
+   CLEAR LOG BUTTON
+========================= */
+
+.log-panel .panel-header button:hover {
+    border-color: var(--red-500);
+    color: var(--red-500);
+}
+
+/* =========================
+   CHART CARD
+========================= */
+
+.chart-container:hover {
+    border-color: var(--neutral-400);
+}
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.stat-card {
+    transition:
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.stat-card:hover {
+    border-color: var(--lime-500);
+    transform: translateY(-2px);
+}
+
+/* =========================
+   SCROLLABLE TICKER
+========================= */
+
+.ticker-item:hover {
+    background: var(--neutral-600);
+}
+
+/* =========================
+   CLOSE PICKER
+========================= */
+
+.close-picker:hover {
+    color: var(--lime-500);
+}
+
+/* =========================
+   EMPTY STATES
+========================= */
+
+.empty-state:hover h3 {
+    color: var(--neutral-100);
+}
+
+/* =========================
+   FOCUS STATES
+========================= */
+
+button:focus-visible,
+input:focus-visible,
+.currency-option:focus-visible {
+    outline: 2px solid var(--lime-500);
+    outline-offset: 2px;
+}
+
+/* =========================
+   DISABLED
+========================= */
+
+button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+button:disabled:hover {
+    background: inherit;
+    border-color: inherit;
+    color: inherit;
+}

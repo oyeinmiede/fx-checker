@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <link rel="stylesheet" href="./css/hover.css" />
     <link
       rel="icon"
       type="image/png"
@@ -11,14 +13,14 @@
       href="./assets/images/favicon-32x32.png"
     />
 
-    <title>Frontend Mentor | FX Checker</title>
+    <title>FX Checker</title>
   </head>
   <body>
     <div class="app">
       <header class="header">
         <img src="./assets/images/logo.svg" alt="FX Checker" class="logo" />
         <div class="header-meta">
-          <span class="currency-count">55</span>
+          <span class="currency-count"></span>
           <span>Currencies</span>
           <span>•</span>
           <span>EOD</span>
@@ -47,6 +49,10 @@
         <section class="converter">
           <div class="converter-header">
             <h1>Check The Rate</h1>
+          </div>
+
+          <div class="error-banner hidden">
+            <span class="error-message"></span>
           </div>
 
           <div class="converter-body">
@@ -115,12 +121,30 @@
               <h2>Select Currency</h2>
               <button class="close-picker">✕</button>
             </div>
-            <input
-              class="currency-search"
-              type="text"
-              placeholder="Search currencies..."
-            />
-            <div class="currency-list"></div>
+            <div class="search-wrapper">
+              <img src="./assets/images/icon-search.svg" alt="">
+              <input
+                class="currency-search"
+                type="text"
+                placeholder="Search currencies..."
+              />
+            </div>
+            <div class="currency-list">
+              <div class="currency-section">
+                <div class="section-header popular-header">
+                  <span>Popular</span>
+                  <span class="popular-count"></span>
+                </div>
+                <div class="popular-list"></div>
+              </div>
+              <div class="currency-section">
+                <div class="section-header">
+                  <span>Other currencies</span>
+                  <span class="other-count"></span>
+                </div>
+                <div class="other-list"></div>
+              </div>
+            </div>
           </div>
         </section>
         <section class="tabs-section">
@@ -167,11 +191,22 @@
                 <h3 class="chart-pair"></h3>
                 <p class="chart-rate"></p>
               </div>
-              <canvas id="history-chart"></canvas>
+              <div class="chart-wrapper">
+                <div class="chart-empty hidden">
+                  No historical data available for this currency pair.
+                </div>
+                <canvas id="history-chart"></canvas>
+              </div>
             </div>
           </div>
 
-          <div class="tab-panel compare-panel hidden"></div>
+          <div class="tab-panel compare-panel hidden">
+            <div class="panel-header">
+              <h2><span>Multi-currency</span> <em class="compare-amount">1,000</em> from <em class="compare-from">usd</em></h2>
+              <p><span class="compare-count">0</span> pairs</p>
+            </div>
+            <div class="compare-container"></div>
+          </div>
 
           <div class="tab-panel favorites-panel hidden">
             <div class="panel-header">

@@ -1,4 +1,5 @@
 import { state } from "./state.js"
+import { saveFavorites } from "./storage.js";
 
 export function renderExchangeRate() {
     const exchangeRateEl = document.querySelector(".exchange-rate")
@@ -40,31 +41,61 @@ export function renderCurrencyButtons() {
     `
 }
 
-export function renderCurrencyList() {
-    const list = document.querySelector(".currency-list");
-    const filtered = state.currencies.filter(currency => {
-        return (
-            currency.code.toLowerCase().includes(state.searchQuery.toLowerCase()) || currency.name.toLowerCase().includes(state.searchQuery.toLowerCase())
-        )
-    })
+function currencyRow(currency) {
+    const selectCode = state.pickerTarget === "from"
+        ? state.fromCurrency.code
+        : state.toCurrency.code
 
-    list.innerHTML = filtered.map(currency => {
-        return `
-            <button 
-                class="currency-option"
-                data-code="${currency.code}"
-            >
-                <img 
+    return `
+        <button
+            class="currency-option"
+            data-code="${currency.code}"
+        >
+            <div class="currency-info">
+                <img
                     src="./assets/images/flags/${currency.flag}.webp"
-                    class="flag"
-                >
+                    alt="${currency.code}"
+                />
                 <div>
                     <strong>${currency.code}</strong>
                     <span>${currency.name}</span>
                 </div>
-            </button>
-        `
-    }).join("")
+            </div>
+            <span class="selected-mark">
+                ${currency.code === selectCode
+            ? '<img src="./assets/images/icon-check.svg" />'
+            : ""
+        }
+            </span>
+        </button>
+    `
+}
+
+export function renderCurrencyPicker() {
+    const popular = state.currencies.filter(currency => state.popularCurrencies.includes(currency.code))
+    const others = state.currencies.filter(currency => !state.popularCurrencies.includes(currency.code))
+    document.querySelector(".popular-count").textContent = popular.length
+    document.querySelector(".other-count").textContent = others.length
+
+    document.querySelector(".popular-list").innerHTML = popular.map(currencyRow).join("")
+    document.querySelector(".other-list").innerHTML = others.map(currencyRow).join("")
+}
+
+export function renderFilteredCurrencies(search) {
+    const query = search.toLowerCase().trim()
+    if (!query) {
+        renderCurrencyPicker()
+        return
+    }
+    const filtered = state.currencies.filter(currency =>
+        currency.code.toLowerCase().includes(query) ||
+        currency.name.toLowerCase().includes(query))
+
+    document.querySelector(".popular-list").innerHTML = ""
+    document.querySelector(".other-list").innerHTML = filtered.map(currencyRow).join("")
+
+    document.querySelector(".popular-count").textContent = 0
+    document.querySelector(".other-count").textContent = filtered.length
 }
 
 export function renderFavoriteButton() {
@@ -126,8 +157,9 @@ export function renderFavoriteCount() {
     const count = document.querySelector(".favorite-count");
     const count1 = document.querySelector(".fav-count");
 
-    count.textContent = state.favorites.length
-    count1.textContent = state.favorites.length
+    const validFavorites = state.favorites.filter(pair => typeof pair === "string" && pair.includes("-"));
+    count.textContent = validFavorites.length;
+    count1.textContent = validFavorites.length;
 }
 
 function getRelativeTime(timestamp) {
@@ -189,7 +221,7 @@ export function renderHistoryStats(values) {
     const open = values[0]
     const last = values[values.length - 1]
     const change = last - open
-    const percentChange = (change/open) * 100
+    const percentChange = (change / open) * 100
 
     document.querySelector(".open-value").textContent = open.toFixed(4)
     document.querySelector(".last-value").textContent = last.toFixed(4)
@@ -215,4 +247,95 @@ export function renderChartMeta() {
         timeZoneName: "short"
     }).format(now);
     document.querySelector(".chart-rate").textContent = `${state.exchangeRate.toFixed(4)} · ${formatted}`
+}
+
+
+export function renderCompare() {
+    const panel = document.querySelector(".compare-container");
+    panel.innerHTML = state.compareData.map(([code, rate]) => {
+        const currency = state.currencies.find(curr => curr.code === code);
+        const pair = `${state.fromCurrency.code}-${code}`;
+        const isFavorite = state.favorites.includes(pair);
+
+        return `
+            <div class="compare-row" data-pair="${pair}">
+            <div class="flag">
+                <img src="./assets/images/flags/${currency?.flag}.webp" />
+            </div>
+            <div>
+                <strong>${code}</strong>
+                <span>${currency?.name || code}</span>
+            </div>
+            <div class="rate-info">
+                <p>${(state.amount * rate).toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
+                <span>@${rate.toFixed(4)}</span>
+            </div>
+            <button class="is-favorite ${isFavorite ? "favorited" : ""}">
+                <img src="./assets/images/${isFavorite ? "icon-star-filled.svg" : "icon-star.svg"}" />
+            </button>
+            </div>
+        `;
+    }).join("");
+
+    document.querySelector(".compare-amount").textContent = state.amount.toLocaleString();
+    document.querySelector(".compare-from").textContent = state.fromCurrency.code;
+    document.querySelector(".compare-count").textContent = state.compareData.length;
+
+    attachFavoriteListeners();
+}
+
+
+function attachFavoriteListeners() {
+    document.querySelectorAll(".is-favorite").forEach(button => {
+        button.addEventListener("click", () => {
+            const row = button.closest(".compare-row");
+            const code = row.querySelector("strong").textContent;
+            const pair = `${state.fromCurrency.code}-${code}`;
+
+            if (state.favorites.includes(pair)) {
+                state.favorites = state.favorites.filter(fav => fav !== pair);
+            } else {
+                state.favorites.push(pair);
+            }
+
+            saveFavorites(state.favorites)
+
+            renderFavoriteButton();
+            renderFavorites();
+            renderFavoriteCount();
+            renderCompare()
+        });
+    });
+}
+
+
+export function renderTicker() {
+    const track = document.querySelector(".ticker-track")
+    track.innerHTML = state.tickerData.map(item => {
+        const positive = item.change >= 0
+        return `
+            <div class="ticker-item">
+                <span class="currency-pair">${item.pair}</span>
+                <span>${item.rate.toFixed(4)}</span>
+                <span
+                    class="${positive
+                ? "positive"
+                : "negative"
+            }"
+                >
+                    ${positive
+                ? "▲"
+                : "▼"
+            }
+                    ${Math.abs(
+                item.change
+            ).toFixed(2)}%
+                </span>
+            </div>
+        `
+    }).join("")
+}
+
+export function renderCurrencyCount() {
+    document.querySelector(".currency-count").textContent = state.currencies.length
 }

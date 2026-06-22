@@ -2,14 +2,18 @@ import {
     renderAmounts,
     renderExchangeRate,
     renderCurrencyButtons,
-    renderCurrencyList,
     renderFavoriteButton,
     renderFavorites,
     renderFavoriteCount,
     renderLog,
     renderLoggedCount,
     renderHistoryStats,
-    renderChartMeta
+    renderChartMeta,
+    renderCompare,
+    renderTicker,
+    renderCurrencyCount,
+    renderFilteredCurrencies,
+    renderCurrencyPicker
 } from "./ui.js";
 import {
     state,
@@ -18,10 +22,14 @@ import {
     toggleFavorites,
     addConversionLog
 } from "./state.js";
-import { 
+import {
     getCurrencies,
-    getExchangeRate, 
-    getHistoricalRates 
+    getExchangeRate,
+    getHistoricalRates,
+    getMultipleRates,
+    getTickerRates,
+    hideError,
+    showError
 } from "./api.js";
 import {
     loadFavorites,
@@ -51,34 +59,53 @@ const currencyButtons = document.querySelectorAll(".currency-btn");
 currencyButtons.forEach((button, index) => {
     button.addEventListener("click", () => {
         state.pickerTarget = index === 0 ? "from" : "to"
-        document.querySelector(".currency-picker").classList.remove("hidden")
-        renderCurrencyList()
+        const picker = document.querySelector(".currency-picker")
+        const rect = button.getBoundingClientRect()
+
+        picker.classList.toggle("hidden")
+
+        picker.style.top = `${window.scrollY + rect.bottom + 10}px`;
+        if (state.pickerTarget === "from") {
+            picker.style.left = `${window.scrollX + rect.left}px`;
+        } else {
+            picker.style.left = `${window.scrollX + rect.right - picker.offsetWidth}px`;
+        }
+        renderCurrencyPicker()
     })
 })
 
 const searchInput = document.querySelector(".currency-search");
 searchInput.addEventListener("input", (e) => {
-    state.searchQuery = e.target.value
-    renderCurrencyList()
+    renderFilteredCurrencies(e.target.value)
 })
 
 const currencyList = document.querySelector(".currency-list");
-currencyList.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
     const button = e.target.closest(".currency-option")
     if (!button) return
     const selected = state.currencies.find(currency => currency.code === button.dataset.code)
     if (state.pickerTarget === "from") {
         state.fromCurrency = selected
-        convertCurrency()
     } else {
         state.toCurrency = selected
-        convertCurrency()
     }
-    document.querySelector(".currency-picker").classList.add("hidden")
-
+    await convertCurrency()
     renderCurrencyButtons()
-    renderExchangeRate()
+
+    document.querySelector(".currency-picker").classList.add("hidden")
 })
+
+document.addEventListener("click", (e) => {
+    const picker = document.querySelector(".currency-picker");
+    const clickedInsidePicker = e.target.closest(".currency-picker");
+    const clickedCurrencyButton = e.target.closest(".currency-btn");
+    if (
+        !clickedInsidePicker &&
+        !clickedCurrencyButton
+    ) {
+        picker.classList.add("hidden");
+    }
+});
 
 async function initializeApp() {
     const currencies = await getCurrencies()
@@ -87,19 +114,33 @@ async function initializeApp() {
     state.conversionLog = loadLog()
     await convertCurrency()
     await loadHistory()
+    await loadCompareData()
+    await loadTicker()
     renderChartMeta()
-    renderCurrencyList()
+    renderCurrencyPicker()
     renderFavoriteButton();
     renderFavoriteButton()
     renderFavorites()
     renderFavoriteCount()
     renderLog()
     renderLoggedCount()
+    renderCurrencyCount()
+    renderCompare()
 }
 
 async function convertCurrency() {
+    hideError()
     const rate = await getExchangeRate(state.fromCurrency.code, state.toCurrency.code)
-    if (!rate) return
+    if (!rate) {
+        showError(
+            `${state.fromCurrency.code}/${state.toCurrency.code} is not supported by the exchange rate provider.`
+        );
+        document.querySelector(".receive-amount").textContent = "--";
+        document.querySelector(".exchange-rate").textContent = "Unavailable";
+
+        document.querySelector(".history-panel").classList.add("disabled");
+        return;
+    }
     updateConversion(rate)
     renderAmounts()
     renderExchangeRate()
@@ -108,6 +149,7 @@ async function convertCurrency() {
     renderFavoriteCount()
     renderLog()
     renderLoggedCount()
+    await loadCompareData()
 }
 
 const favoriteButton = document.querySelector(".favorite");
@@ -133,11 +175,20 @@ favoritesPanel.addEventListener("click", (e) => {
 })
 
 const logButton = document.querySelector(".log")
+let logTimeout
 logButton.addEventListener("click", () => {
     addConversionLog()
     saveLog(state.conversionLog)
     renderLog()
     renderLoggedCount()
+
+    clearTimeout(logTimeout)
+    logButton.innerHTML = `<img src="./assets/images/icon-check.svg" /> Logged`
+    logButton.classList.add("favorited")
+    logTimeout = setTimeout(() => {
+        logButton.textContent = "Log Conversion"
+        logButton.classList.remove("favorited")
+    }, 3000)
 })
 
 const logContainer = document.querySelector(".log-container")
@@ -183,6 +234,20 @@ function getEndDate() {
     return date.toISOString().split("T")[0];
 }
 
+function formatChartDate(date) {
+    const parsed = new Date(date);
+    const now = new Date();
+    const diffYears = now.getFullYear() - parsed.getFullYear();
+    const options = {
+        month: "short",
+        day: "numeric",
+        ...(diffYears > 0 ? { year: "numeric" } : {})
+    };
+
+    return parsed.toLocaleDateString("en-US", options);
+}
+
+
 async function loadHistory() {
     const startDate = getStartDate(state.activeRange)
     const endDate = getEndDate()
@@ -193,7 +258,7 @@ async function loadHistory() {
         endDate
     )
     if (!rates) return
-    const labels = Object.keys(rates)
+    const labels = Object.keys(rates).map(formatChartDate)
     const values = Object.values(rates).map(rate => rate[state.toCurrency.code])
     renderChart(labels, values)
     renderHistoryStats(values)
@@ -209,4 +274,43 @@ rangeButtons.forEach(button => {
     })
 })
 
+async function loadCompareData() {
+    const rates = await getMultipleRates(state.fromCurrency.code, state.compareCurrencies)
+    if (!rates) return
+    state.compareData = Object.entries(rates)
+    renderCompare()
+}
+
+function generateChange() {
+    return (
+        (Math.random() * 2) - 1
+    ).toFixed(2);
+}
+
+async function loadTicker() {
+    const rates = await getTickerRates()
+    state.tickerData = rates.map(item => ({
+        ...item,
+        change: generateChange()
+    }))
+    renderTicker()
+}
+
+const tabs = document.querySelectorAll(".tab")
+const panels = document.querySelectorAll(".tab-panel")
+
+tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => {
+            t.classList.remove("active")
+        })
+        panels.forEach(p => {
+            p.classList.add('hidden')
+        })
+        tab.classList.add("active")
+        panels[index].classList.remove("hidden")
+    })
+})
+
 initializeApp()
+setInterval(loadTicker, 60000)

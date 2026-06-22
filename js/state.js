@@ -18,9 +18,26 @@ export const state = {
     conversionLog: [],
     currencies: [],
     historicalData: [],
+    compareCurrencies: [
+        "EUR",
+        "GBP",
+        "CAD",
+        "JPY",
+        "NGN",
+        "AUD",
+        "CHF",
+        "CNY"
+    ],
+    compareData: [],
     pickerOpen: false,
     pickerTarget: null,
     searchQuery: "",
+    tickerData: [],
+    popularCurrencies: [
+        "USD",
+        "EUR",
+        "GBP"
+    ],
 }
 
 export function swapCurrencies() {
